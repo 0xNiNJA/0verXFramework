@@ -383,74 +383,7 @@ function FindTarget( Restricted, Position, Distance, Priority )
 	return BestEntity;
 	
 end
-function FindTarget( Restricted, Position, Distance, Priority )
 
-	-- Prepare the variables to contain the list, best entity and distance.
-	
-	local BestEntity = nil;
-	local BestDistance = 0;
-
-	-- Check if a position has been provided and use the starting position when this is not the case.
-	if Position == nil then
-		Position = self._PositionStart;
-	end
-
-	-- Check if a position has been provided and use the starting position when this is not the case.
-	if Distance == nil then
-		if Restricted then
-			Distance = 30;
-		else
-			Distance = Settings.TargetSearchDistance;
-		end
-	end
-
-	-- Loop through the available entities to find the spirit.
-	for ID, Entity in DictionaryIterator( EntityList:GetList()) do
-
-		-- Check if this monster is in the maximum range from the starting position, if is a proper monster and if it is alive.
-		if ( self._LosIdSkip == nil or ( Entity:GetId() ~= self._LosIdSkip or Entity:GetTargetId() == Player:GetId())) and Entity:IsMonster() and not Entity:IsFriendly() and not Entity:IsDead() and not Entity:IsObject() and not Entity:IsHidden() then
-
-			if Position:DistanceToPosition( Entity:GetPosition()) < Distance then
-			
-				-- Check if this monster is not engaged in combat with another player. This is skipped when searching for attackers only!
-				if not Priority and ( Restricted == nil or Restricted == false ) and ( Entity:GetTargetID() == 0 or Entity:GetTargetID() == Entity:GetID() or ForceList:GetForce( Entity:GetTargetID()) ~= nil or ( EntitySpirit ~= nil and Entity:GetTargetID() == EntitySpirit:GetID())) then
-
-					-- Check if this entity has a level higher than one or we are in Ishalgen/Poeta.
-					if Entity:GetLevel() > 1 or Player:GetWorld() == 220010000 or Player:GetWorld() == 210010000 then
-					
-						-- Calculate the distance from my position to the target entity.
-						local CurrentDistance = Player:GetPosition():DistanceToPosition( Entity:GetPosition());
-						
-						-- Check if the monster is hostile, in which case it gets a higher priority due to it attacking us when near.
-						if Entity:IsHostile() then
-							CurrentDistance = CurrentDistance - 10;
-						end
-						
-						-- Check if this entity is closer than the previous monster and remember it when it is.
-						if BestDistance == 0 or BestDistance > CurrentDistance then
-							BestDistance = CurrentDistance
-							BestEntity = Entity;
-						end
-						
-					end
-					
-				-- Check if this monster has targeted me and assign the highest priority on it!
-				elseif Entity:GetTargetID() == Player:GetID() and BestDistance > -10 then
-					BestEntity = Entity;
-					BestDistance = -10;
-				-- Check if this monster has targeted my spirit (if it is available), which will be the second highest priority!
-				end
-				
-			end
-			
-		end
-		
-	end
-
-	-- Return the best entity match we have found.
-	return BestEntity;
-	
-end
 
 function CheckMelee()
 
