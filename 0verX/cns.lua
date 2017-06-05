@@ -27,14 +27,12 @@ end
 --- OnFrame: Detect movement stop on a per-frame basis to quickly chain movement.
 -- @return	void
 function OnFrame()
-		--Framework:OnFrame();
+		
 	
-		if Player:GetTargetId() ~= 0 then
-			Entity = EntityList:GetEntity( Player:GetTargetID());
-		Range = Player:GetPosition():DistanceToPosition( EntityList:GetEntity( Player:GetTargetID()):GetPosition());
-			Framework:OnRun();
+
+			OnRun();
 		end
-end
+		
 
 
 --- OnRun is called each frame to advance the script logic.
@@ -42,49 +40,43 @@ end
 
 function OnRun()
 	
-	
 	if _AttackStarted ~= nil then
-		
-
-		local ShardAddress = DialogList:GetDialog( "basic_status_dialog/boost_marker" ):GetAddress();
-		local Shard = Memory:GetUnsignedInteger(ShardAddress +424) > 1060000000;
-		
-		if Player:IsDead() then
-			return false;
-		end
-		if Player:GetTargetId() ~= 0 then
 	
-		Entity = EntityList:GetEntity( Player:GetTargetID());
-		Range = Player:GetPosition():DistanceToPosition( EntityList:GetEntity( Player:GetTargetID()):GetPosition());
-		local EntityAttitude =  Entity:GetAttitude():ToString();
-		local EntityType = Entity:GetTypeID();		
+		if Player:GetTargetId() ~= 0 and not Player:IsMoving() and not Player:IsBusy() then
 		
-			if Player:GetTargetId() == 0 or Entity:IsDead() then
+			if Player:IsDead() or Player:GetTargetId() == 0 then
 				return false;
 			end
-			if Entity:GetTargetID() == Player:GetID() and not Entity:IsDead() and not Entity:IsObject() and not Entity:IsHidden() and Entity:IsHostile() then
+			
+			
+			Range = Player:GetPosition():DistanceToPosition( Entity:GetPosition());	
+			EntityAttitude =  Entity:GetAttitude():ToString();
+			if Entity:GetTargetID() == Player:GetID() and not Entity:IsDead() and not Entity:IsObject() and not Entity:IsHidden() and Entity:IsHostile() and Entity:IsMonster() and not Entity:IsPet() then
 				EntityIsAttackable = true;
 			end
-			if Entity:IsMonster() and EntityAttitude ~= "Friendly" and EntityAttitude ~= "Utility" and not Entity:IsPet() then
+			if EntityAttitude ~= "Friendly" then
 				EntityIsAttackable = true;
 			end
-			if Entity:IsPet() or Entity:IsFriendly() or Entity:IsObject() or Entity:IsKisk() then
+			if Entity:IsPet() or Entity:IsFriendly() or Entity:IsObject() or Entity:IsKisk() or EntityAttitude == "Utility" or  Entity:IsDead() then
 				EntityIsAttackable = false;
 				return false;
 			end
 		
 			if EntityIsAttackable == true then
-				if not Player:IsMoving() and not Player:IsBusy() and Helper:CheckAvailable( "Attack" ) and (Player:GetPosition():DistanceToPosition( Entity:GetPosition()) <= 35 and Player:GetPosition():DistanceToPosition( Entity:GetPosition()) >= 5) then
-						PlayerInput:Ability( "Attack" );
-						return true;
-				else
-					EntityIsAttackable = nil;
-					return Controller:Attack( Entity, Player:GetPosition():DistanceToPosition( Entity:GetPosition()), Stunned, true );
-				
+			
+				if  Helper:CheckAvailable( "Attack" ) and Range <= 35 and Range >= 5 then
+						
+						 return Helper:CheckExecute( "Attack" );
+						 
+						 
+				elseif Range <= 35 then
+						
+					return Controller:Attack( Entity, Range, Stunned, true );
+				end
+			EntityIsAttackable = nil;
 				end
 			end
-		
+			
 		end
-
-	end
+	
 end

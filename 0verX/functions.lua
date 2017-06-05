@@ -399,3 +399,129 @@ function CheckMelee()
 	return false;
 	
 end
+
+
+
+---------------Bufovani-------------
+function CheckCritFood()
+
+stateID = {10224,10225,9976,9989,10051,10064};
+foodName = {"Calydon Meat Dumpling","Wild Ginseng Pickle","Tasty Calydon Meat Dumpling","Tasty Wild Ginseng Pickle","Innesi Herb Dumpling","Poma Wine Herb Dumpling","Tasty Innesi Herb Dumpling","Tasty Poma Wine Herb Dumpling"};
+flag = 0;
+
+    for _,v in ipairs(stateID) do
+        if Player:GetState():GetState( v ) ~= nil then
+            flag = flag + 1;
+        end
+    end
+
+    if flag == 0 then
+        for a,b in ipairs(foodName) do
+            if Helper:CheckAvailableInventory( b ) then
+                PlayerInput:Inventory( b );
+                break;
+            end
+        end
+    end
+
+
+return true;
+end
+
+--------------------------------
+function CheckAttackFood()
+
+stateID = {10051,10064,10224,10225,9976,9989};
+foodName = {"Minor Focus Agent","Lesser Focus Agent","Focus Agent","Greater Focus Agent","Major Focus Agent","Fine Focus Agent"};
+flag = 0;
+
+    for _,v in ipairs(stateID) do
+        if Player:GetState():GetState( v ) ~= nil then
+            flag = flag + 1;
+        end
+    end
+
+    if flag == 0 then
+        for a,b in ipairs(foodName) do
+            if Helper:CheckAvailableInventory( b ) then
+                PlayerInput:Inventory( b );
+                break;
+            end
+        end
+    end
+return true;
+
+
+end
+-----------------------------------
+function CheckNaturalHeal()
+
+stateID = {10044,10094};
+foodName = {"Minor Rally Serum","Lesser Rally Serum","Rally Serum","Greater Rally Serum","Major Rally Serum","Fine Rally Serum","Tasty Ormea Cocktail"};
+flag = 0;
+
+    for _,v in ipairs(stateID) do
+        if Player:GetState():GetState( v ) ~= nil then
+            flag = flag + 1;
+        end
+    end
+
+    if flag == 0 then
+        for a,b in ipairs(foodName) do
+            if Helper:CheckAvailableInventory( b ) then
+                PlayerInput:Inventory( b );
+                break;
+            end
+        end
+    end
+return true;
+
+end
+-------------------------------------
+function CheckAttackScroll()
+
+stateID = {9959};
+foodName = {"Greater Courage Scroll"};
+flag = 0;
+
+    for _,v in ipairs(stateID) do
+        if Player:GetState():GetState( v ) ~= nil then
+            flag = flag + 1;
+        end
+    end
+
+    if flag == 0 then
+        for a,b in ipairs(foodName) do
+            if Helper:CheckAvailableInventory( b ) then
+                PlayerInput:Inventory( b );
+                break;
+            end
+        end
+    end
+return true;
+
+end
+
+function CheckRunScroll()
+
+stateID = {9960};
+foodName = {"Greater Running Scroll"};
+flag = 0;
+
+    for _,v in ipairs(stateID) do
+        if Player:GetState():GetState( v ) ~= nil then
+            flag = flag + 1;
+        end
+    end
+
+    if flag == 0 then
+        for a,b in ipairs(foodName) do
+            if Helper:CheckAvailableInventory( b ) then
+                PlayerInput:Inventory( b );
+                break;
+            end
+        end
+    end
+return true;
+
+end

@@ -32,23 +32,7 @@ function Attack( Entity, Range, Stunned )
 		return false;
 	end
 	
-	if Settings.Gladiator.AllowTalocHollow then
-		-- Taloc's Hollow
-		if Helper:CheckAvailableInventory( "Taloc's Tears" ) and Range <= 6 then
-			PlayerInput:Inventory( "Taloc's Tears" );
-			return false;
-		end	
---[[
-		if Helper:CheckAvailableInventory( "Neith's Sleepstone" ) then
-			PlayerInput:Inventory( "Neith's Sleepstone" );
-			return false;
-		end	
-]]--			
-		if Helper:CheckAvailableInventory( "Gellmar's Wardstone" ) then
-			PlayerInput:Inventory( "Gellmar's Wardstone" );
-			return false;
-		end
-	end
+
 
 	-- Chain 1: Remove Shock (Care on WE aoe attack)
 	if not Stunned and Helper:CheckAvailable( "Ferocity" ) then
@@ -63,58 +47,63 @@ function Attack( Entity, Range, Stunned )
 	end
 
 	-- Buffs
-	if Entity:GetHealth() >= 50 and Helper:CheckAvailable( "Berserking" ) then
-		Helper:CheckExecute( "Berserking" );
+	if Entity:GetHealth() >= 50 and Helper:CheckAvailable( "Shadow Rage" ) then
+		Helper:CheckExecute( "Shadow Rage");
 		return false;
-	end
+    end
 	
-	if Entity:GetHealth() >= 50 and Helper:CheckAvailable( "Unwavering Devotion" ) then
-		Helper:CheckExecute( "Unwavering Devotion" );
-		return false;
-	end
+	--if Entity:GetHealth() < 90 and Helper:CheckAvailable( "Unwavering Devotion" ) then
+	--	Helper:CheckExecute( "Unwavering Devotion" );
+	--	return false;
+	--end
 	
-	if Entity:GetHealth() >= 50 and Player:GetHealth() <= 75 and Helper:CheckAvailable( "Wall of Steel" ) then
+	if Entity:GetHealth() >= 50 and Player:GetHealth() <= 60 and Helper:CheckAvailable( "Wall of Steel" ) then
 		Helper:CheckExecute( "Wall of Steel" );
 		return false;
 	end
 	
--- BEGIN DP SKILLS
---[[ DOESN'T WORK PROPERLY
-	if Entity:GetHealth() >= 50 and Player:GetHealth() <= 75 and Helper:CheckAvailable( "Draining Blow" ) and Helper:CheckAvailable( "Explosion of Rage" ) then
-		Helper:CheckExecute( "Explosion of Rage" );
-		return false;
-	elseif 	Entity:GetHealth() >= 75 and Helper:CheckAvailable( "Zikel's Threat" ) then 
-		Helper:CheckExecute( "Zikel's Threat" );
-		return false;
-	elseif 	Entity:GetHealth() >= 75 and Helper:CheckAvailable( "Daevic Fury" ) then 
-		Helper:CheckExecute( "Daevic Fury" );
-		return false;
-	end
-]]--
 
--- END DP SKILLS
 	
 -- BEGIN STATE ACTIVATED SKILLS
-	
+if Entity:GetHealth() >= 50 and Helper:CheckAvailable( "Daevic Fury" ) and Player:GetDP() >=2000 then
+ Helper:CheckExecute( "Daevic Fury");
+return false;
+elseif Helper:CheckAvailable( "Zikel's Threat" ) and Player:GetDP() >=4000 then
+  Helper:CheckExecute( "Zikel's Threat");
+return false;
+end
+
 	-- Successful Parry
-	if Helper:CheckAvailable( "Vengeful Strike" ) then
-		Helper:CheckExecute( "Vengeful Strike" );
+	if Helper:CheckAvailable( "Counter Leech" )  and Range <= 3 then
+		Helper:CheckExecute( "Counter Leech" );
 		return false;
 	end
 	
+	if Helper:CheckAvailable( "Sure Strike" ) and Range <= 3 then
+		Helper:CheckExecute( "Sure Strike" );
+		return false;
+	end
+	if Helper:CheckAvailable( "Piercing Rupture" ) and Range <= 9 then
+			Helper:CheckExecute( "Piercing Rupture" );
+			return false;
+		end
+	if Helper:CheckAvailable( "Draining Sword" ) and Player:GetHealthCurrent() < Player:GetHealthMaximum() - 2550 and Range <= 3 then
+		Helper:CheckExecute( "Draining Sword" );
+		return false;
+	end
 	-- Mob Stumbled Skills
 	-- Check if Health status warrants using Draining Blow
-	if Helper:CheckAvailable( "Draining Blow" ) and Player:GetHealthCurrent() < Player:GetHealthMaximum() - 750 and Range <= 6 then
-		Helper:CheckExecute( "Draining Blow" );
+	if Helper:CheckAvailable( "Draining Blow VIII" ) and Range <= 6  then
+		Helper:CheckExecute( "Draining Blow VIII" );
 		return false;
 	elseif Helper:CheckAvailable( "Crippling Cut" ) and Range <= 6  then
 		Helper:CheckExecute( "Crippling Cut" );
 		return false;
-	elseif Helper:CheckAvailable( "Springing Slice" ) then
+	elseif Helper:CheckAvailable( "Springing Slice" ) and Range  > 15  then
 		Helper:CheckExecute( "Springing Slice" );
 		return false;
-	elseif Helper:CheckAvailable( "Final Strike" ) and Range <= 6  then
-		Helper:CheckExecute( "Final Strike" );
+	end
+	if Helper:CheckAvailable( "Final Strike" )  and Range <= 6  then
 		return false;
 	end
 	
@@ -137,28 +126,28 @@ function Attack( Entity, Range, Stunned )
 		return false;
 	end
 
-	-- Chain 6: AoE Chain - Shock Wave
-	if Helper:CheckAvailable( "Seismic Billow" ) and Range <= 6 then
-		Helper:CheckExecute( "Seismic Billow" );
-		return false;
-	end
 	
 	-- Chain 6: AoE Chain - Seismic Wave/Absorbing Fury
-	if Helper:CheckAvailable( "Pressure Wave" ) and Range <= 6 then
-		Helper:CheckExecute( "Pressure Wave" );
+	if Helper:CheckAvailable( "Exhausting Wave" ) and Range <= 6 then
+		Helper:CheckExecute( "Exhausting Wave" );
 		return false;
-	elseif Helper:CheckAvailable( "Shock Wave" ) and Range <= 6 then
-		Helper:CheckExecute( "Shock Wave" );
+		end
+	-- Chain 6: AoE Chain - Seismic Wave/Absorbing Fury
+	if Helper:CheckAvailable( "Earthquake Wave" ) and Range <= 6 then
+		Helper:CheckExecute( "Earthquake Wave" );
 		return false;
-	end
-	
+		end
+	if Helper:CheckAvailable( "Fury Absorption" ) and Range <= 6 then
+			Helper:CheckExecute( "Fury Absorption" );
+			return false;
+		end
 	-- Chain 2: Ferocious Strike
 	if Helper:CheckAvailable( "Robust Blow" ) then
 		Helper:CheckExecute( "Robust Blow" );
 		return false;
-	elseif Helper:CheckAvailable( "Rage" ) then
-		Helper:CheckExecute( "Rage" );
-		return false;
+	--elseif Helper:CheckAvailable( "Rage" ) then
+	--	Helper:CheckExecute( "Rage" );
+	--	return false;
 	end
 
 	-- Chain 2: Robust Blow
@@ -210,8 +199,8 @@ function Attack( Entity, Range, Stunned )
 
 	
 	-- Severe Weakening Blow
-	if Helper:CheckAvailable( "Severe Weakening Blow" ) then
-		Helper:CheckExecute( "Severe Weakening Blow" );
+	if Helper:CheckAvailable( "Weakening Blow" ) then
+		Helper:CheckExecute( "Weakening Blow" );
 		return false;
 	end
 	
@@ -220,7 +209,16 @@ function Attack( Entity, Range, Stunned )
 		Helper:CheckExecute( "Ferocious Strike" );
 		return false;
 	end
-	
+	-- Attack 3: Ferocious Strike
+	if Helper:CheckAvailable( "Body Smash" ) then
+		Helper:CheckExecute( "Body Smash" );
+		return false;
+	end
+	-- Attack 3: Ferocious Strike
+	if Helper:CheckAvailable( "Sharp Strike" ) then
+		Helper:CheckExecute( "Sharp Strike" );
+		return false;
+	end
 	-- Attack 4: Aerial Lockdown
 	if Helper:CheckAvailable( "Aerial Lockdown" ) then
 		Helper:CheckExecute( "Aerial Lockdown" );
@@ -229,21 +227,11 @@ function Attack( Entity, Range, Stunned )
 	
 	-- Attack 5: AoE Skills
 	if Settings.Gladiator.AllowAoe and Range <= 6 then
-		if Helper:CheckAvailable( "Absorbing Fury" ) and Player:GetHealthCurrent() < Player:GetHealthMaximum() - 500 then
-			Helper:CheckExecute( "Absorbing Fury" );
-			return false;
-		elseif Helper:CheckAvailable( "Seismic Wave" ) then
-			Helper:CheckExecute( "Seismic Wave" );
-			return false;
-		end
+		--if Helper:CheckAvailable( "Fury Absorption" ) then
+		--	Helper:CheckExecute( "Fury Absorption" );
+		--	return false;
+		--end
 		
-		if Helper:CheckAvailable( "Piercing Rupture" ) then
-			Helper:CheckExecute( "Piercing Rupture" );
-			return false;
-		elseif Helper:CheckAvailable( "Piercing Wave" ) then
-			Helper:CheckExecute( "Piercing Wave" );
-			return false;
-		end
 	end
 	
 	-- Chain 2 Attack: Ferocious Strike
@@ -265,15 +253,10 @@ end
 
 function Heal( BeforeForce )
 		
-	-- Check if we should recharge our health using recovery spell.
-	if Helper:CheckAvailable( "Improved Stamina" ) and Player:GetHealthCurrent() < Player:GetHealthMaximum() - 900 then
-		Helper:CheckExecute( "Improved Stamina", Player );
-		return false;
-	end
-	
-	-- Check if we should recharge our health using recovery spell.
-	if Helper:CheckAvailable( "Stamina Recovery" ) and Player:GetHealthCurrent() < Player:GetHealthMaximum() - 1500 then
-		Helper:CheckExecute( "Stamina Recovery", Player );
+
+-- Check if we should recharge our health using recovery spell.
+	if Helper:CheckAvailable( "Second Wind" ) and Player:GetHealth() < 50 then
+		Helper:CheckExecute( "Second Wind");
 		return false;
 	end
 

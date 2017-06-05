@@ -33,14 +33,22 @@ function OnLoad()
 	Write("¬ (OEM Key) - AutoAttack / AutoReact");
 	Write("Insert - Enhance Vision - view hidden chars!");
 end
-function OnFrame()		
-		
-		Framework:OnFrame();
+function OnFrame()
+
+	if not Player:IsMoving() and not Player:IsBusy() then
+		Framework:OnRun();
 	end
+		
+end
 
 function OnRun()
-		Framework:OnFrame();
-		Framework:OnRun();
+		
+		if Player:GetTargetId() ~= 0 then
+			
+			Entity = EntityList:GetEntity( Player:GetTargetID());
+			Framework:OnRun();
+		end
+		
 
 end
 
