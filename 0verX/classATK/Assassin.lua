@@ -52,12 +52,10 @@ end
 -- @return	bool
 
 function Attack( Entity, Range, Stunned )
-	
-	--Entity = EntityList:GetEntity( Player:GetTargetId());
-	--local Range = Player:GetPosition():DistanceToPosition( Entity:GetPosition());
+
 	-- Check if we are a melee orientated class and the target has reflect!
 	-- NOTE: Removed CheckMelee, so even Sorcerers will take a break here. Some reason, that didn't work.. no clue why!
-	
+
 	----------------------------------------------
 	------------------ContRanged Buffs----------------
 	----------------------------------------------
@@ -97,13 +95,13 @@ function Attack( Entity, Range, Stunned )
 			Helper:CheckExecute( "Focused Evasion" );
 	end
 	-- 25m range activation
-	if Range <= 25 then
+	if Player:GetPosition():DistanceToPosition( Entity:GetPosition()) <= 25 then
 	--Buff 1: Apply Deadly Poison
 		if Player:GetState():GetState( Helper:CheckName( "Apply Deadly Poison" )) == nil and Helper:CheckAvailable( "Apply Deadly Poison" ) then
 			Helper:CheckExecute( "Apply Deadly Poison" );	
 		end
 	end	
-	-- 10m Range_ activation
+	-- 10m range activation
 	if Player:GetPosition():DistanceToPosition( Entity:GetPosition()) <= 10 then
 		if Helper:CheckAvailable( "Devotion" ) then
 			Helper:CheckExecute( "Devotion" );
@@ -127,12 +125,12 @@ function Attack( Entity, Range, Stunned )
 	if Helper:CheckAvailable( "Killing Spree" ) then
 		Helper:CheckExecute( "Killing Spree" );
 	end
-	-- Fang Strike -> Beast Swipe
-	if Helper:CheckAvailable( "Beast Swipe" ) then
-		Helper:CheckExecute( "Beast Swipe" );
-	-- Beast Kick -> Beast Kick
-	elseif Helper:CheckAvailable( "Beast Kick" ) then
+	-- Fang Strike -> Beast Kick
+	if Helper:CheckAvailable( "Beast Kick" ) then
 		Helper:CheckExecute( "Beast Kick" );
+	-- Beast Kick -> Beast Swipe
+	elseif Helper:CheckAvailable( "Beast Swipe" ) then
+		Helper:CheckExecute( "Beast Swipe" );
 	end
 	
 	-- Soul Slash  -> Rune Slash
@@ -147,16 +145,15 @@ function Attack( Entity, Range, Stunned )
 		self._iBindingTime = nil;
 	end
 	
-	if Player:GetPosition():DistanceToPosition(Entity:GetPosition()) <= Player:GetAttackRange() then
+	if Player:GetPosition():DistanceToPosition( Entity:GetPosition()) <= 2 and not Player:IsMoving() and Helper:CheckAvailable("Back Breaker" ) then
 			local PosE = Entity:GetPosition();
 			local dist = 1;  
 			local Angle = Entity:GetRotation();
 			PosE.X = PosE.X - dist*math.sin(Angle*(math.pi/180));
 			PosE.Y = PosE.Y + dist*math.cos(Angle*(math.pi/180));
-		if not Player:IsMoving() and not Player:IsBusy() and Helper:CheckAvailable("Back Breaker" ) then
 			Player:SetPosition(PosE);
 			Helper:CheckExecute( "Back Breaker" );
-		end
+		
 	end
 	-- Stunned -> Shadowfall
 	if Helper:CheckAvailable( "Shadowfall" ) then
@@ -228,8 +225,8 @@ function Attack( Entity, Range, Stunned )
 			Helper:CheckExecute( "Binding Rune" );
 		end
 	elseif Runes >= 3 then
-		if not Stunned and Helper:CheckAvailable( "Pain Rune Burst" ) then
-			Helper:CheckExecute( "Pain Rune Burst" );
+		if not Stunned and Helper:CheckAvailable( "Pain Rune" ) then
+			Helper:CheckExecute( "Pain Rune" );
 		end
 	elseif Runes >= 2 then
 		if Helper:CheckAvailable( "Repeated Rune Carve" ) then
@@ -239,33 +236,21 @@ function Attack( Entity, Range, Stunned )
 	end
 	
 	-- Attack 5: Surprise Attack (Spin)
-	
-	--if Player:GetPosition():DistanceToPosition(Entity:GetPosition()) <= Player:GetAttackRange() then
-	--		local PosE = Entity:GetPosition();
-	--		local dist = 1;  
-	--		local Angle = Entity:GetRotation();
-	--		PosE.X = PosE.X - dist*math.sin(Angle*(math.pi/180));
-	--		PosE.Y = PosE.Y + dist*math.cos(Angle*(math.pi/180));
-	--	if not Player:IsBusy() and Helper:CheckAvailable("Bloodthirster Surprise Attack") then
-	--		Player:SetPosition(PosE);
-	--		Helper:CheckExecute( "Bloodthirster Surprise Attack" );
-	--	end
-	if Player:GetPosition():DistanceToPosition(Entity:GetPosition()) <= Player:GetAttackRange() then
+	if Player:GetPosition():DistanceToPosition( Entity:GetPosition()) <= 2 and not Player:IsMoving() and Helper:CheckAvailable("Surprise Attack") then
 			local PosE = Entity:GetPosition();
 			local dist = 1;  
 			local Angle = Entity:GetRotation();
 			PosE.X = PosE.X - dist*math.sin(Angle*(math.pi/180));
 			PosE.Y = PosE.Y + dist*math.cos(Angle*(math.pi/180));
-		if not Player:IsMoving() and not Player:IsBusy() and Helper:CheckAvailable("Surprise Attack") then
 			Player:SetPosition(PosE);
 			Helper:CheckExecute( "Surprise Attack" );
-		end
 	end
+	
 		end
 
 function Pause()
 
-	
+	-- Nothing was executed, continue with other functions.
 	return true;
 	
 end

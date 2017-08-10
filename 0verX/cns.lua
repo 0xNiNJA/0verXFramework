@@ -27,11 +27,13 @@ end
 --- OnFrame: Detect movement stop on a per-frame basis to quickly chain movement.
 -- @return	void
 function OnFrame()
+		OriginalAttackSpd =  Player:GetAttackSpeed();
+		Player:SetAttackSpeed(299);
 		
-	
-
 			OnRun();
-		end
+		
+		Player:SetAttackSpeed(OriginalAttackSpd);
+end
 		
 
 
@@ -40,40 +42,46 @@ function OnFrame()
 
 function OnRun()
 	
-	if _AttackStarted ~= nil then
 	
-		if Player:GetTargetId() ~= 0 and not Player:IsMoving() and not Player:IsBusy() then
+	if _AttackStarted ~= nil then
 		
-			if Player:IsDead() or Player:GetTargetId() == 0 then
+		if Player:GetTargetId() ~= 0 and not Player:IsMoving() and not Player:IsBusy() then
+			
+			Entity = EntityList:GetEntity( Player:GetTargetID())
+			
+			
+			if Entity == nil or Player:IsDead() or Entity:IsDead() then
 				return false;
+			
+			else
+				Range = Player:GetPosition():DistanceToPosition( Entity:GetPosition());	
+				EntityAttitude =  Entity:GetAttitude():ToString();
+				
 			end
 			
-			
-			Range = Player:GetPosition():DistanceToPosition( Entity:GetPosition());	
-			EntityAttitude =  Entity:GetAttitude():ToString();
-			if Entity:GetTargetID() == Player:GetID() and not Entity:IsDead() and not Entity:IsObject() and not Entity:IsHidden() and Entity:IsHostile() and Entity:IsMonster() and not Entity:IsPet() then
-				EntityIsAttackable = true;
-			end
-			if EntityAttitude ~= "Friendly" then
-				EntityIsAttackable = true;
-			end
-			if Entity:IsPet() or Entity:IsFriendly() or Entity:IsObject() or Entity:IsKisk() or EntityAttitude == "Utility" or  Entity:IsDead() then
+			Helper:IsAttackable()
+		
+			if Entity == nil or Player:IsDead() then
 				EntityIsAttackable = false;
 				return false;
-			end
-		
-			if EntityIsAttackable == true then
+			elseif Entity:IsDead() then
+				EntityIsAttackable = false;
+				return false;
+			elseif Entity:IsGatherable() or Entity:IsPet() or Entity:IsFriendly() or Entity:IsDead() then
+				
+				return false;
+			elseif Entity:IsHostile() or Entity:GetTargetID() == Player:GetID() then
 			
-				if  Helper:CheckAvailable( "Attack" ) and Range <= 35 and Range >= 5 then
+			if  EntityIsAttackable ~= false and Range <= 35 and Range >= 5 then
 						
-						 return Helper:CheckExecute( "Attack" );
+			 return Helper:CheckExecute( "Attack" );
 						 
 						 
 				elseif Range <= 35 then
 						
 					return Controller:Attack( Entity, Range, Stunned, true );
 				end
-			EntityIsAttackable = nil;
+
 				end
 			end
 			

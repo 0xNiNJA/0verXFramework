@@ -34,40 +34,39 @@ function OnLoad()
 	Write("Insert - Enhance Vision - view hidden chars!");
 end
 function OnFrame()
-
-	if not Player:IsMoving() and not Player:IsBusy() then
+	--Player:SetAttackSpeed(299);
+	if Player:GetTargetId() ~= 0 then
 		Framework:OnRun();
 	end
 		
 end
 
 function OnRun()
-		
-		if Player:GetTargetId() ~= 0 then
+	if not Player:IsMoving() and not Player:IsBusy() then
+			OnFrame();
 			
-			Entity = EntityList:GetEntity( Player:GetTargetID());
 			Framework:OnRun();
+	end
 		end
-		
-
-end
 
 function AttackHandle()
 	
 	if _AttackStarted ~= nil then
 			_AttackStarted = nil;
 			Player:SetHideDetectionLevel(0)
-			--DialogList:GetDialog( "radar_dialog" ):SetVisible( true );
+			DialogList:GetDialog( "radar_dialog" ):SetVisible( true );
 			--DialogList:GetDialog( "chat_dialog" ):SetVisible( true );
 			DialogList:GetDialog( "subzone_name_dialog" ):SetVisible( true );
+			DialogList:GetDialog( "start_dialog" ):SetVisible( true );
 			Write("0verkill Mode: DISABLED!");	
 			PlayerInput:Console("/w " .. PlayerWhisperName .. " 0verkill mode DISABLED!");
 		else
 			_AttackStarted = true;
 			Player:SetHideDetectionLevel(2);
-			--DialogList:GetDialog( "radar_dialog" ):SetVisible( false );
+			DialogList:GetDialog( "radar_dialog" ):SetVisible( false );
 			--DialogList:GetDialog( "chat_dialog" ):SetVisible( false );
 			DialogList:GetDialog( "subzone_name_dialog" ):SetVisible( false );
+			DialogList:GetDialog( "start_dialog" ):SetVisible( false );
 			Write("0verkill Mode: ENABLED!");
 			PlayerInput:Console("/w " .. PlayerWhisperName .. " 0verkill mode ENABLED!");
 			

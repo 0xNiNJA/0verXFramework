@@ -124,21 +124,7 @@ function Initialize()
 			-- Indicates whether or not to taunt without continously spamming it.
 			AllowSmartTaunting = true
 		};
-		-- Songweaver
-		self.Songweaver = {
-			-- Indicates whether or not attacking is allowed. Songweaver version to allow following and such.
-			AllowAttack = true,
-			-- Indicates whether or not approaching a target is allowed. Auto approach must be enabled for this to work.
-			AllowApproach = true,
-			-- Indicates whether or not buffing force members is allowed. Disable this if you want to run as an assisting script.
-			AllowBuff = true,
-			-- Indicates whether or not sleeping multiple attackers is allowed.
-			AllowSleep = false,
-			-- Indicates whether or not healing is allowed. Disable this if you want to run as an assisting script.
-			AllowHealing = true,
-			-- Indicates whether or not mana healing is allowed. Disable this if you want to run as an assisting script.
-			AllowHealingMana = true
-		};
+
 		-- Check if the player-specific settings file exists and load values from it.
 		if Settings ~= nil then
 
